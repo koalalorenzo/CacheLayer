@@ -1,0 +1,5 @@
+django<1.8
+django-redis<4.0
+requests
+psycopg2
+ipdb
