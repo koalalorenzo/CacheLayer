@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50, verbose_name=b'Service Name')),
                 ('descrition', models.TextField(null=True, blank=True)),
                 ('base_url', models.URLField(null=True, blank=True)),
-                ('cache', models.IntegerField(default=60, verbose_name=b'Cache duration (in seconds)')),
+                ('cache', models.IntegerField(default=300, verbose_name=b'Cache duration (in seconds)')),
                 ('check', models.IntegerField(default=60, verbose_name=b'Check period')),
                 ('request_timeout', models.IntegerField(default=30, verbose_name=b'HTTP request timeout')),
                 ('is_enabled', models.BooleanField(default=False)),
