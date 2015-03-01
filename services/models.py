@@ -1,11 +1,13 @@
+from datetime import datetime
+
+import urlparse
+import requests
+import socket
+
 from django.db import models
 from django.core.cache import cache
 from django.http import HttpResponse, HttpRequest
 from django.test import Client
-
-import urlparse
-import requests
-
 
 class Service(models.Model):
     class Meta:
@@ -28,14 +30,19 @@ class Service(models.Model):
     edited = models.DateTimeField(auto_now=True)
 
     @property
+    def service_key(self):
+        the_hash = hash(self.base_url)
+        return "{}".format(the_hash)
+
+    @property
     def is_down(self):
         if self.force_down: 
             return True
-        return cache.get("service_%s_is_down" % self.pk, False)
+        return cache.get("status:%s" % self.service_key, False)
 
     @is_down.setter
     def is_down(self, value):
-        return cache.set("service_%s_is_down" % self.pk, value, self.check)        
+        return cache.set("status:%s" % self.service_key, value, self.check)        
 
     def save_cached_content(self, request, content):
         cache.set(self.get_cache_key(request), content, self.cache)
@@ -55,6 +62,7 @@ class Service(models.Model):
         extra_url = request.path.replace(self.get_absolute_url(), "")
         the_url = urlparse.urljoin(self.base_url, extra_url)
 
+        socket.setdefaulttimeout(timeout)
         if has_body:
             proxied_response = requestor(
                 the_url, timeout=timeout,
@@ -73,6 +81,7 @@ class Service(models.Model):
                 "content": response.content,
                 "content-type": response.headers.get('content-type'),
                 "headers": response.headers,
+                "created": datetime.now().strftime("%a, %d %b %Y %H:%M:%S GMT")
             }
             self.is_down = False
         except:
@@ -90,18 +99,22 @@ class Service(models.Model):
         if success_status:
             self.save_cached_content(request, content)
             return content
-        elif force:
+        
+        if force:
             return content
         
         return self.get_cached_content(request)
-    
+
     def get_cache_key(self, request):
         """Get the key to use in the cache"""
-        final_hash = hash(request.method)
-        final_hash += hash(frozenset(request.REQUEST.items()))
-        final_hash += hash(frozenset(request.COOKIES.items()))
+        request_hash = hash(request.method)
+        request_hash += hash(frozenset(request.REQUEST.items()))
 
-        return 'service_%s_request_%s' % (self.pk, final_hash)
+        url_hash = hash(self.base_url)
+        url_hash += hash(request.path)
+
+        key = 'request:%s:%s:%s' % (self.service_key, url_hash, request_hash)
+        return key
 
     def ping(self):
         """ Ping the URL and set, if needed, the service as Down """
