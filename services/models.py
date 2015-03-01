@@ -50,6 +50,10 @@ class Service(models.Model):
     def get_cached_content(self, request):
         return cache.get(self.get_cache_key(request), None)
 
+    def __extract_path(self, request_path):
+        return request_path.replace(self.get_absolute_url(), "")
+
+
     def __make_remote_request(self, request):
         requestor = getattr(requests, request.method.lower())
         try:
@@ -59,7 +63,7 @@ class Service(models.Model):
             has_body = False
 
         timeout = int(self.request_timeout)
-        extra_url = request.path.replace(self.get_absolute_url(), "")
+        extra_url = self.__extract_path(request.path)
         the_url = urlparse.urljoin(self.base_url, extra_url)
 
         socket.setdefaulttimeout(timeout)
@@ -107,14 +111,15 @@ class Service(models.Model):
 
     def get_cache_key(self, request):
         """Get the key to use in the cache"""
-        request_hash = hash(request.method)
-        request_hash += hash(frozenset(request.REQUEST.items()))
+        request_hash = hash(frozenset(request.REQUEST.items()))
+        path = self.__extract_path(request.path)
 
-        url_hash = hash(self.base_url)
-        url_hash += hash(request.path)
-
-        key = 'request:%s:%s:%s' % (self.service_key, url_hash, request_hash)
-        return key
+        return 'request:{service}:{path}:{method}:{hash}'.format(
+            service=self.service_key, 
+            path=path,
+            method=request.method, 
+            hash=request_hash,
+        )
 
     def ping(self):
         """ Ping the URL and set, if needed, the service as Down """
