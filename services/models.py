@@ -129,4 +129,4 @@ class Service(models.Model):
         return "%s %s" % (self.name, self.base_url[:30]) 
     
     def get_absolute_url(self):
-        return "/%s" % self.pk
+        return "/%s/" % self.pk
