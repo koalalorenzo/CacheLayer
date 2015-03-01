@@ -9,6 +9,8 @@ from django.core.cache import cache
 from django.http import HttpResponse, HttpRequest
 from django.test import Client
 
+from tld import get_tld
+
 class Service(models.Model):
     class Meta:
         verbose_name = "Service"
@@ -31,8 +33,8 @@ class Service(models.Model):
 
     @property
     def service_key(self):
-        the_hash = hash(self.base_url)
-        return "{}".format(the_hash)
+        tld = get_tld(self.base_url, fail_silently=True)
+        return "{}".format(tld)
 
     @property
     def is_down(self):
@@ -51,7 +53,7 @@ class Service(models.Model):
         return cache.get(self.get_cache_key(request), None)
 
     def __extract_path(self, request_path):
-        return request_path.replace(self.get_absolute_url(), "")
+        return request_path.replace(self.get_absolute_url(), "/")
 
 
     def __make_remote_request(self, request):
