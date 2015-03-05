@@ -21,7 +21,6 @@ class Service(models.Model):
 
     name = models.CharField("Name", max_length=50)
     domain = models.CharField("Domain", null=True, blank=True, max_length=60)
-    base_url = models.URLField(null=True, blank=True)
 
     descrition = models.TextField(null=True, blank=True)
 
@@ -96,6 +95,9 @@ class Service(models.Model):
         )
 
     def cache_content(self, request, content):
+        if self.cache_duration <= 0:
+            return 
+
         cache.set(self.get_cache_key(request), content, self.cache_duration)
         
         logger.debug("{key} Cached for {seconds}".format(
@@ -129,12 +131,12 @@ class Service(models.Model):
 
         timeout = int(self.request_timeout)
         extra_url = self.__extract_path(request.path)
-        the_url = urlparse.urljoin(self.base_url, extra_url)
+        base_url = "{}://{}/".format(request.scheme, self.domain)
+        the_url = urlparse.urljoin(base_url, extra_url)
 
-        logger.debug("{key} Downloading {url} from {base_url}".format(
+        logger.debug("{key} Downloading {url}".format(
             key=self.get_storage_key(request),
             url=the_url,
-            base_url=self.base_url
         ))
 
         socket.setdefaulttimeout(timeout)
@@ -207,12 +209,11 @@ class Service(models.Model):
         return False, test_request
 
     def __str__(self):
-        if not self.domain:
-            self.domain = get_tld(self.base_url, fail_silently=True)
-
-        return "%s %s" % (self.domain, self.base_url[:30]) 
+        return "{}".format(self.domain) 
     
-    def get_absolute_url(self):
-        self.domain = get_tld(self.base_url, fail_silently=True)
+    def __unicode__(self):
+        return u"{}".format(self.domain) 
 
+
+    def get_absolute_url(self):
         return "/pub/%s/" % (self.domain)
