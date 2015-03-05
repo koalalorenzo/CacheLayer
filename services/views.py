@@ -1,5 +1,8 @@
 from datetime import datetime
 
+import logging
+logger = logging.getLogger(__name__)
+
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseServerError
@@ -18,11 +21,12 @@ HOP_BY_HOP_HEADERS = [
     "upgrade",
 ]
 
-def get_data(request, service_reference, extra_url=None):
+def get_data(request, domain, extra_url=None):
     """"""
-    service = get_object_or_404(Service, pk=service_reference)
+
+    service = get_object_or_404(Service, domain=domain)
     
-    content = service.content(request)
+    content = service.get_content(request)
     if not content:
         response = HttpResponseServerError("Service not available or cache expired")
         response["X-OpenData-Created"] = datetime.now()
