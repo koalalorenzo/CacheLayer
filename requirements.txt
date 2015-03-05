@@ -4,5 +4,6 @@ psycopg2
 django-redis<4.0
 django-smartcc
 requests
-tld
+
 ipdb
+fig

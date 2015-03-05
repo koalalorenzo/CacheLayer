@@ -12,8 +12,6 @@ from django.core.cache import cache
 from django.http import HttpResponse, HttpRequest
 from django.test import Client
 
-from tld import get_tld
-
 class Service(models.Model):
     class Meta:
         verbose_name = "Service"
