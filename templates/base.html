@@ -10,13 +10,24 @@
         <meta name="description" content="{% block meta-description %}{% endblock %}">
         <meta name="keywords" content="{% block meta-keywords %}{% endblock %}">
 
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+
 	{% endblock header %}
 	</head>
 	<body>
-		{% block body %}
+		<div class="container">
+		{% block body %}{% endblock body %}
+		</div>
 
-		{% endblock body %}
+		<footer>
+		{% block footer %}
+			<div class="container">
+				
+			</div>
+		{% endblock %}
+		</footer>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	</body>
 </html>
