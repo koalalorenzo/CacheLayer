@@ -29,7 +29,7 @@ def get_data(request, domain, extra_url=None):
     content = service.get_content(request)
     if not content:
         response = HttpResponseServerError("Service not available or cache expired")
-        response["X-OpenData-Created"] = datetime.now()
+        response["X-CacheLayer-Created"] = datetime.now()
 
     else:
         response = HttpResponse(content["content"], content_type=content["content-type"])
@@ -39,7 +39,7 @@ def get_data(request, domain, extra_url=None):
                 continue
             response[header_key] = header_value
         
-        response["X-OpenData-Created"] = content['created']
+        response["X-CacheLayer-Created"] = content['created']
         
-    response["X-OpenData-Status"] = "HIT" if service.is_down else "LIVE"
+    response["X-CacheLayer-Status"] = "HIT" if service.is_down else "LIVE"
     return response
