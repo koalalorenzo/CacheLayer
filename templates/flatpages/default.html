@@ -1,11 +1,11 @@
-{% extend base.html %}
+{% extends "base.html" %}
 
 {% block title %} - {{flatpage.title}}{% endblock title%}
 
 {% block body %}
 <article>
-	<h1>{{flatpage.title}}</h1>
-	<p>
+	<h1 class="animate fadeInDown">{{flatpage.title}}</h1>
+	<p class="animate fadeIn">
 		{{flatpage.content}}
 	</p>
 </article>

@@ -1,9 +1,18 @@
+{% load static from staticfiles %}
+
 <!DOCTYPE html>
 <html>
 	<head>
-		{% block header %}
-			<title>Cache Website{% block title %}{% endblock title%}</title>
-		{% endblock header %}
+	{% block header %}
+        <meta charset="utf-8">
+
+        <title>{% block title %}{% endblock %} {% if flavour == "mobile" %}(mobile version){% endif %}</title>
+        <meta name="description" content="{% block meta-description %}{% endblock %}">
+        <meta name="keywords" content="{% block meta-keywords %}{% endblock %}">
+
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+	{% endblock header %}
 	</head>
 	<body>
 		{% block body %}
