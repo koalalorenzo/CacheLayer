@@ -100,7 +100,7 @@ class Service(models.Model):
 
         cache.set(self.get_cache_key(request), content, self.cache_duration)
         
-        logger.debug("{key} Cached for {seconds}".format(
+        logger.debug("{key} Cached for {seconds} seconds".format(
             key=self.get_cache_key(request),
             seconds=self.cache_duration
         ))
