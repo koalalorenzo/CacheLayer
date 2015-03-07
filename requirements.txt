@@ -2,6 +2,7 @@ uwsgi
 django<1.8
 psycopg2
 django-redis<4.0
+django-tastypie
 django-smartcc
 requests
 
