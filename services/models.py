@@ -37,6 +37,10 @@ class Service(models.Model):
     crawled_at = models.DateTimeField(blank=True, null=True)
 
     @property
+    def endpoint(self):
+        return self.get_absolute_url()    
+
+    @property
     def is_down(self):
         if self.force_down: 
             return True
