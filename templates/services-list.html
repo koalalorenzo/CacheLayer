@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+
+{% block body %}
+	<div ng-app="services">
+		<h1>List of services</h1>
+
+		<div ng-controller="ServicesController" ng-init="maindomain='{{ request.META.HTTP_HOST }}'">
+		{% verbatim %}
+			<p class="lead" ng-show="is_loading">Loading...</p>
+			<div id="services-list" ng-hide="is_loading" ng-repeat="service in services">
+
+				<div id="service" ng-class="{'animated flash down':service.is_down}">
+					<h2>{{ service.name }} <small>{{ service.domain }}</small></h2>
+					<p>{{ service.description }}</p>
+					<code>curl http://{{ maindomain }}{{ service.endpoint }}</code>
+				</div>
+			</div>
+		{% endverbatim %}
+		</div>
+
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'js/services.js' %}"></script>
+{% endblock %}

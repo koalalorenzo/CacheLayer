@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseServerError
+from django.shortcuts import render
 
 from .models import Service
 
@@ -43,3 +44,6 @@ def get_data(request, domain, extra_url=None):
         
     response["X-CacheLayer-Status"] = "HIT" if service.is_down else "LIVE"
     return response
+
+def service_list(request):
+    return render(request, 'services-list.html')
