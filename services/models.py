@@ -3,14 +3,15 @@ from datetime import datetime
 import urlparse
 import requests
 import socket
+from tld import get_tld
 
 import logging
 logger = logging.getLogger(__name__)
 
 from django.db import models
 from django.core.cache import cache
-from django.http import HttpResponse, HttpRequest
 from django.test import Client
+
 
 class Service(models.Model):
     class Meta:
@@ -22,36 +23,36 @@ class Service(models.Model):
 
     descrition = models.TextField(null=True, blank=True)
 
+    store_days = models.IntegerField("Days to keep data", default=7)
+    check_period = models.IntegerField("Period of downtime", default=60)
+    request_timeout = models.IntegerField("Request timeout", default=30)
+    cache_duration = models.IntegerField("Cache expiration", default=60)
 
-    store_days = models.IntegerField("Store duration (in days)", default=7)
-    check_period = models.IntegerField("Status period (in seconds)", default=60)
-    request_timeout = models.IntegerField("Request timeout (in seconds)", default=30)
-    cache_duration = models.IntegerField("Cache duration (in seconds)", default=60)
-    
     is_enabled = models.BooleanField(default=False)
-    is_crawler_enabled = models.BooleanField(default=False)
     force_down = models.BooleanField(default=False)
+
+    is_crawler_enabled = models.BooleanField(default=False)
+    crawled_at = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
-    crawled_at = models.DateTimeField(blank=True, null=True)
 
     @property
     def endpoint(self):
-        return self.get_absolute_url()    
+        return self.get_absolute_url()
 
     @property
     def is_down(self):
-        if self.force_down: 
+        if self.force_down:
             return True
         return cache.get("status:%s" % self.domain, False)
 
     @is_down.setter
     def is_down(self, value):
         status = "is down!" if value else "is up!"
-        logger.info("[service:%s] %s" % (self.domain, status) )
+        logger.info("[service:%s] %s" % (self.domain, status))
 
-        return cache.set("status:%s" % self.domain, value, self.check_period)        
+        return cache.set("status:%s" % self.domain, value, self.check_period)
 
     # Save the content for longer
 
@@ -61,9 +62,9 @@ class Service(models.Model):
         path = self.__extract_path(request.path)
 
         return 'request:{service}:{path}:{method}:{hash}'.format(
-            service=self.domain, 
+            service=self.domain,
             path=path,
-            method=request.method, 
+            method=request.method,
             hash=request_hash,
         )
 
@@ -74,9 +75,9 @@ class Service(models.Model):
         return cache.get(self.get_storage_key(request), None)
 
     def store_content(self, request, content):
-        seconds = 60*60*24 * self.store_days
+        seconds = 60 * 60 * 24 * self.store_days
         cache.set(self.get_storage_key(request), content, seconds)
-        
+
         logger.debug("{key} Saved for {days} days".format(
             key=self.get_storage_key(request),
             days=self.store_days
@@ -90,18 +91,18 @@ class Service(models.Model):
         path = self.__extract_path(request.path)
 
         return 'cache:{service}:{path}:{method}:{hash}'.format(
-            service=self.domain, 
+            service=self.domain,
             path=path,
-            method=request.method, 
+            method=request.method,
             hash=request_hash,
         )
 
     def cache_content(self, request, content):
         if self.cache_duration <= 0:
-            return 
+            return
 
         cache.set(self.get_cache_key(request), content, self.cache_duration)
-        
+
         logger.debug("{key} Cached for {seconds} seconds".format(
             key=self.get_cache_key(request),
             seconds=self.cache_duration
@@ -113,12 +114,11 @@ class Service(models.Model):
         ))
         return cache.get(self.get_cache_key(request), None)
 
-
-    # Tools
-
     def __extract_path(self, request_path):
-        return request_path.replace(self.get_absolute_url(), "")
-
+        path = request_path.replace(self.get_absolute_url(), "")
+        if not path:
+            return "/"
+        return path
 
     def __make_remote_request(self, request):
         """
@@ -126,7 +126,7 @@ class Service(models.Model):
         """
         requestor = getattr(requests, request.method.lower())
         try:
-            body = request.body
+            request.body  # Checkign if it has the body method
             has_body = True
         except:
             has_body = False
@@ -195,27 +195,31 @@ class Service(models.Model):
             self.store_content(request, content)
             self.cache_content(request, content)
             return content
-        
+
         if force:
             return content
-        
+
         return self.get_stored_content(request)
 
     def ping(self):
-        """ Ping the URL and set, if needed, the service as Down """
-        client =  Client()
+        """ Download the URL and set, if needed, the service as Down """
+        client = Client()
         test_request = client.get(self.get_absolute_url())
 
-        if test_request.has_header("ODCACHE-STATUS"):
-            return test_request["ODCACHE-STATUS"] == "LIVE"
+        if test_request.has_header("X-CacheLayer-Status"):
+            return test_request["X-CacheLayer-Status"] == "GOT", test_request
         return False, test_request
-
-    def __str__(self):
-        return "{}".format(self.domain) 
-    
-    def __unicode__(self):
-        return u"{}".format(self.domain) 
-
 
     def get_absolute_url(self):
         return "/pub/%s/" % (self.domain)
+
+    def __str__(self):
+        return "{}".format(self.domain)
+
+    def __unicode__(self):
+        return u"{}".format(self.__str__())
+
+    @classmethod
+    def from_url_to_cachelayer_path(cls, url):
+        domain = get_tld(url)
+        return url[url.index(domain):]

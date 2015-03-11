@@ -5,6 +5,7 @@ django-redis<4.0
 django-tastypie
 django-smartcc
 requests
+tld
 
 ipdb
 fig
