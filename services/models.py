@@ -1,4 +1,4 @@
-from datetime import datetime
+import re
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,7 +8,11 @@ from django.db import models
 from django.core.cache import cache
 from django.test import Client
 
-import urlparse
+try:
+    import urlparse
+except:
+    from urllib.parse import urlparse
+
 from tld import get_tld
 
 from .tasks import download_content
@@ -20,7 +24,7 @@ class Service(models.Model):
         verbose_name_plural = "Services"
 
     name = models.CharField("Name", max_length=50)
-    domain = models.CharField("Domain", null=True, blank=True, max_length=60)
+    domain = models.CharField("Domain", max_length=60)
 
     descrition = models.TextField(null=True, blank=True)
 
@@ -132,13 +136,30 @@ class Service(models.Model):
         timeout = int(self.request_timeout)
         extra_url = self.__extract_path(request.path)
         base_url = "{}://{}/".format(request.scheme, self.domain)
-        the_url = urlparse.urljoin(base_url, extra_url)
+        the_url = '/'.join(s.strip('/') for s in [base_url, extra_url])
 
         logger.debug("{key} Downloading {url}".format(
             key=self.get_storage_key(request),
             url=the_url,
         ))
-        return download_content.run(request, the_url, timeout)
+
+        # See: http://stackoverflow.com/questions/3889769/how-can-i-get-all-the-request-headers-in-django
+        regex = re.compile('^HTTP_')
+        headers = dict(
+            (regex.sub('', header), value)
+            for (header, value) in
+            request.META.items() if header.startswith('HTTP_')
+        )
+
+        print(headers)
+
+        task = download_content.delay(
+            method=request.method,
+            url=the_url,
+            timeout=timeout,
+            headers=headers
+        )
+        return task.get(timeout=timeout)
 
     # The core methods:
 
@@ -148,14 +169,9 @@ class Service(models.Model):
             key=self.get_storage_key(request),
         ))
 
+        content = self.__make_remote_request(request)
+
         try:
-            response = self.__make_remote_request(request)
-            content = {
-                "content": response.content,
-                "content-type": response.headers.get('content-type'),
-                "headers": response.headers,
-                "created": datetime.now().strftime("%a, %d %b %Y %H:%M:%S GMT")
-            }
             self.is_down = False
         except:
             self.is_down = True
@@ -213,6 +229,10 @@ class Service(models.Model):
 
     def get_absolute_url(self):
         return "/pub/%s/" % (self.domain)
+
+    def save(self, *args, **kwargs):
+        self.domain = get_tld(self.domain)
+        return super(Service, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{}".format(self.domain)

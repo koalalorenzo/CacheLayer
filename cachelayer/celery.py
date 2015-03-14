@@ -18,6 +18,8 @@ app.config_from_object('django.conf:settings')
 app.conf.update(
     BROKER_URL=settings.CACHES["celery"]["LOCATION"],
     CELERY_RESULT_BACKEND=settings.CACHES["celery"]["LOCATION"],
+    CELERY_TASK_SERIALIZER='pickle',
+    CELERY_RESULT_SERIALIZER='pickle',
 )
 
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)

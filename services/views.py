@@ -8,7 +8,6 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render
 
 from .models import Service
-from .tasks import add
 
 HOP_BY_HOP_HEADERS = [
     "connection",
@@ -40,10 +39,13 @@ def get_data(request, domain, extra_url=None):
             content["content"], content_type=content["content-type"]
         )
 
-        for header_key, header_value in content["headers"].iteritems():
+        for header_key in content["headers"]:
             if header_key.lower() in HOP_BY_HOP_HEADERS:
                 continue
-            response[header_key] = header_value
+
+            # Python 3 and 2 support:
+            response[header_key] = content["headers"][header_key]
+
         response["X-CacheLayer-Created"] = content['created']
 
     response["X-CacheLayer-Status"] = "HIT" if service.is_down else "GOT"
@@ -51,5 +53,4 @@ def get_data(request, domain, extra_url=None):
 
 
 def service_list(request):
-    print add.delay(5)
     return render(request, 'services-list.html')

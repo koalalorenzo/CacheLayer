@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from celery import shared_task
 
+from datetime import datetime
 import random
 import requests
 
@@ -12,24 +13,27 @@ def add(x):
 
 
 @shared_task
-def download_content(request, url, timeout):
+def download_content(*args, **kwargs):
     """ This method is making the "reverse_proxy" happen. """
-    import socket
+    method = kwargs.get("method", "get")
+    url = kwargs.get("url", "")
+    timeout = kwargs.get("timeout", 60)
+    headers = kwargs.get("headers", {})
 
-    requestor = getattr(requests, request.method.lower())
-    try:
-        request.body  # Checkign if it has the body method
-        has_body = True
-    except:
-        has_body = False
+    print(headers)
+    requestor = getattr(requests, method.lower())
+    response = requestor(
+        url,
+        headers=headers,
+        timeout=int(timeout),
+        allow_redirects=False,
+    )
 
-    socket.setdefaulttimeout(timeout)
-    if has_body:
-        proxied_response = requestor(
-            url, timeout=timeout,
-            data=request.body, files=request.FILES
-        )
-    else:
-        proxied_response = requestor(url, timeout=int(timeout))
+    content = {
+        "content": response.content,
+        "content-type": response.headers.get('content-type'),
+        "headers": response.headers,
+        "created": datetime.now().strftime("%a, %d %b %Y %H:%M:%S GMT")
+    }
 
-    return proxied_response
+    return content
