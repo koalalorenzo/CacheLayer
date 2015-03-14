@@ -1,4 +1,8 @@
 from .default import *
+import os
+
+DEBUG = os.environ.get('DEBUG', "False") == "True"
+TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {
     'default': {
