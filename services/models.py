@@ -1,16 +1,17 @@
 from datetime import datetime
 
-import urlparse
-import requests
-import socket
-from tld import get_tld
-
 import logging
 logger = logging.getLogger(__name__)
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.cache import cache
 from django.test import Client
+
+import urlparse
+from tld import get_tld
+
+from .tasks import download_content
 
 
 class Service(models.Model):
@@ -34,6 +35,7 @@ class Service(models.Model):
     is_crawler_enabled = models.BooleanField(default=False)
     crawled_at = models.DateTimeField(blank=True, null=True)
 
+    created_by = models.ForeignKey(User, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
 
@@ -126,12 +128,6 @@ class Service(models.Model):
 
     def __make_remote_request(self, request):
         """ This method is making the "reverse_proxy" happen. """
-        requestor = getattr(requests, request.method.lower())
-        try:
-            request.body  # Checkign if it has the body method
-            has_body = True
-        except:
-            has_body = False
 
         timeout = int(self.request_timeout)
         extra_url = self.__extract_path(request.path)
@@ -142,17 +138,7 @@ class Service(models.Model):
             key=self.get_storage_key(request),
             url=the_url,
         ))
-
-        socket.setdefaulttimeout(timeout)
-        if has_body:
-            proxied_response = requestor(
-                the_url, timeout=timeout,
-                data=request.body, files=request.FILES
-            )
-        else:
-            proxied_response = requestor(the_url, timeout=int(timeout))
-
-        return proxied_response
+        return download_content.run(request, the_url, timeout)
 
     # The core methods:
 

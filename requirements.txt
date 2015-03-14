@@ -1,6 +1,8 @@
 uwsgi
 django<1.8
 psycopg2
+celery-with-redis
+django-celery
 django-redis<4.0
 django-tastypie
 django-smartcc

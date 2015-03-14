@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render
 
 from .models import Service
+from .tasks import add
 
 HOP_BY_HOP_HEADERS = [
     "connection",
@@ -50,4 +51,5 @@ def get_data(request, domain, extra_url=None):
 
 
 def service_list(request):
+    print add.delay(5)
     return render(request, 'services-list.html')

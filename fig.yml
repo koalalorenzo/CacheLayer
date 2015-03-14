@@ -1,7 +1,24 @@
 database:
   image: postgres
+
 redis:
   image: redis
+  ports:
+  - "6379:6379"
+
+worker:
+  build: .
+  volumes:
+    - .:/code
+  environment:
+   - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
+   - DEBUG=True
+   - C_FORCE_ROOT=True
+  links:
+   - database
+   - redis
+  command: python manage.py celeryd -l DEBUG
+
 uwsgi:
   build: .
   volumes:
