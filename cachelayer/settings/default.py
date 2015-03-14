@@ -131,9 +131,9 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers':['null'],
+            'handlers': ['null'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'django.request': {
             'handlers': ['console'],
@@ -152,5 +152,3 @@ LOGGING = {
         },
     }
 }
-
-
