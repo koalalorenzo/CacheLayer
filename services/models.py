@@ -57,7 +57,7 @@ class Service(models.Model):
     # Save the content for longer
 
     def get_storage_key(self, request):
-        """Get the key to use in the cache"""
+        """ Get the key to use in the cache """
         request_hash = hash(frozenset(request.REQUEST.items()))
         path = self.__extract_path(request.path)
 
@@ -68,13 +68,8 @@ class Service(models.Model):
             hash=request_hash,
         )
 
-    def get_stored_content(self, request):
-        logger.debug("{key} Requested from cache".format(
-            key=self.get_storage_key(request),
-        ))
-        return cache.get(self.get_storage_key(request), None)
-
     def store_content(self, request, content):
+        """ Save the content in the storage """
         seconds = 60 * 60 * 24 * self.store_days
         cache.set(self.get_storage_key(request), content, seconds)
 
@@ -82,6 +77,13 @@ class Service(models.Model):
             key=self.get_storage_key(request),
             days=self.store_days
         ))
+
+    def get_stored_content(self, request):
+        """ Get the content from the storage """
+        logger.debug("{key} Requested from cache".format(
+            key=self.get_storage_key(request),
+        ))
+        return cache.get(self.get_storage_key(request), None)
 
     # Save the content for few seconds
 
@@ -98,6 +100,7 @@ class Service(models.Model):
         )
 
     def cache_content(self, request, content):
+        """ Save the content, based on the request, in cache """
         if self.cache_duration <= 0:
             return
 
@@ -109,6 +112,7 @@ class Service(models.Model):
         ))
 
     def get_cached_content(self, request):
+        """ Get the content, based on the request from the cache """
         logger.debug("{key} Requested from cache".format(
             key=self.get_cache_key(request),
         ))
@@ -121,9 +125,7 @@ class Service(models.Model):
         return path
 
     def __make_remote_request(self, request):
-        """
-            This method is making the "reverse_proxy" happen.
-        """
+        """ This method is making the "reverse_proxy" happen. """
         requestor = getattr(requests, request.method.lower())
         try:
             request.body  # Checkign if it has the body method
@@ -181,6 +183,19 @@ class Service(models.Model):
         return True, content
 
     def get_content(self, request, force=False):
+        """
+            This method will check the status, the cache and then
+            decide from where get the content and download it from there.
+            it will return the content object that is a response inside a
+            dictionary with this structure:
+
+            {
+                "content": the response,
+                "content-type": its content type,
+                "headers": its headers,
+                "created": string of the date when it was downloaded.
+            }
+        """
         if self.is_down and not force:
             return self.get_stored_content(request)
 
