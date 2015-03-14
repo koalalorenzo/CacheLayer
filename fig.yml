@@ -13,5 +13,5 @@ uwsgi:
    - "80:8000"
    - "8000:8000"
   environment:
-   - DJANGO_SETTINGS_MODULE=opendatacache.settings.docker
+   - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
   command: uwsgi --ini uwsgi.ini

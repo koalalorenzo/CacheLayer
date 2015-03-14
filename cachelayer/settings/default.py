@@ -1,5 +1,5 @@
 """
-Django settings for opendatacache project.
+Django settings for cachelayer project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -69,9 +69,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'opendatacache.urls'
+ROOT_URLCONF = 'cachelayer.urls'
 
-WSGI_APPLICATION = 'opendatacache.wsgi.application'
+WSGI_APPLICATION = 'cachelayer.wsgi.application'
 
 
 # Database

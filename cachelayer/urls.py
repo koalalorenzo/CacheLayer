@@ -4,7 +4,7 @@ from django.contrib import admin
 urlpatterns = patterns('',
     # Examples:
     url(r'^', include('services.urls')),
-    url(r'^robots.txt$', 'opendatacache.views.robots'),
+    url(r'^robots.txt$', 'cachelayer.views.robots'),
     url(r'^admin/', include(admin.site.urls)),
 )
 
