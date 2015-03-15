@@ -17,7 +17,7 @@ worker:
   links:
    - database
    - redis
-  command: python manage.py celeryd -l DEBUG
+  command: python /code/manage.py celeryd
 
 uwsgi:
   build: .
@@ -32,4 +32,4 @@ uwsgi:
   environment:
    - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
    - DEBUG=True
-  command: python ./manage.py runserver 0.0.0.0:8000 # Debug
+#  command: python /code/manage.py runserver 0.0.0.0:8000 # Debug
