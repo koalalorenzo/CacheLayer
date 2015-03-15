@@ -3,26 +3,20 @@ database:
 
 redis:
   image: redis
-  ports:
-  - "6379:6379"
 
 worker:
   build: .
-  volumes:
-    - .:/code
   environment:
    - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
-   - DEBUG=True
+   - DEBUG=False
    - C_FORCE_ROOT=True
   links:
    - database
    - redis
-  command: python /code/manage.py celeryd -l DEBUG
+  command: python /code/manage.py celeryd
 
 uwsgi:
   build: .
-  volumes:
-    - .:/code
   links:
    - database
    - redis
@@ -31,5 +25,4 @@ uwsgi:
    - "8000:8000"
   environment:
    - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
-   - DEBUG=True
-  command: python /code/manage.py runserver 0.0.0.0:8000 # Debug
+   - DEBUG=False

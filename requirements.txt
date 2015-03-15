@@ -10,4 +10,5 @@ requests
 tld
 
 ipdb
-fig
+docker-compose # Production
+fig # Local tests
