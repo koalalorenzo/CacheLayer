@@ -1,0 +1,23 @@
+database:
+  image: postgres
+
+redis:
+  image: redis
+
+worker:
+  build: .
+  environment:
+   - DEBUG=False
+   - C_FORCE_ROOT=True
+  links:
+   - database
+   - redis
+  command: python /code/manage.py celeryd
+
+uwsgi:
+  build: .
+  links:
+   - database
+   - redis
+  ports:
+   - "80:8000"
