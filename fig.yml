@@ -11,7 +11,6 @@ worker:
   volumes:
     - .:/code
   environment:
-   - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
    - DEBUG=True
    - C_FORCE_ROOT=True
   links:
@@ -30,6 +29,5 @@ uwsgi:
    - "80:8000"
    - "8000:8000"
   environment:
-   - DJANGO_SETTINGS_MODULE=cachelayer.settings.docker
    - DEBUG=True
   command: python /code/manage.py runserver 0.0.0.0:8000 # Debug
