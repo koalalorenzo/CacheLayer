@@ -20,7 +20,6 @@ def download_content(*args, **kwargs):
     timeout = kwargs.get("timeout", 60)
     headers = kwargs.get("headers", {})
 
-    print(headers)
     requestor = getattr(requests, method.lower())
     response = requestor(
         url,

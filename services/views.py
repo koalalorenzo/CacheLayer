@@ -40,6 +40,7 @@ def get_data(request, domain, extra_url=None):
         )
 
         for header_key in content["headers"]:
+            header_key = header_key.replace("_", "-")
             if header_key.lower() in HOP_BY_HOP_HEADERS:
                 continue
 

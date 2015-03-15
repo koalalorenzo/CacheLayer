@@ -145,13 +145,11 @@ class Service(models.Model):
 
         # See: http://stackoverflow.com/questions/3889769/how-can-i-get-all-the-request-headers-in-django
         regex = re.compile('^HTTP_')
-        headers = dict(
-            (regex.sub('', header), value)
-            for (header, value) in
-            request.META.items() if header.startswith('HTTP_')
-        )
-
-        print(headers)
+        headers = dict()
+        for (header, value) in request.META.items():
+            if header.startswith('HTTP_'):
+                header_new = regex.sub('', header).replace("_", "-")
+                headers[header_new] = value
 
         task = download_content.delay(
             method=request.method,
