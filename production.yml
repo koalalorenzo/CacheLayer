@@ -12,7 +12,7 @@ worker:
   links:
    - database
    - redis
-  command: python /code/manage.py celeryd
+  command: python manage.py celeryd
 
 uwsgi:
   build: .
