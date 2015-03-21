@@ -229,7 +229,8 @@ class Service(models.Model):
         return "/pub/%s/" % (self.domain)
 
     def save(self, *args, **kwargs):
-        self.domain = get_tld(self.domain)
+        if "http" in self.domain:
+            self.domain = get_tld(self.domain)
         return super(Service, self).save(*args, **kwargs)
 
     def __str__(self):
