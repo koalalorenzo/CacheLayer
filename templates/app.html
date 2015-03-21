@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+
+{% block body %}
+	<div ng-app="servicesApp" ng-init="maindomain='{{ request.META.HTTP_HOST }}'">
+		<div ng-controller="ServicesController"></div>
+		<div ng-controller="AddServiceController"></div>
+
+		<div ng-view></div>
+
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'js/services.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,15 @@
+<h1>List of services</h1>
+    <p class="lead" ng-show="is_loading">Loading...</p>
+    <p class="lead" ng-hide="services.length > 0">No services available!</p>
+    <div id="services-list" ng-hide="is_loading" ng-repeat="service in services">
+
+        <div id="service" ng-class="{'animated flash down':service.is_down}">
+            <h2>{{ service.name }} <small>{{ service.domain }}</small></h2>
+            <p>{{ service.description }}</p>
+            <code>curl http://{{ maindomain }}{{ service.endpoint }}</code>
+        </div>
+
+    </div>
+
+    <p ng-hide="is_loading">Automatic reload in {{seconds_left}} seconds... <a href ng-clic="stop_loop()">Stop</a></p>
+</div>

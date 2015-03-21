@@ -54,4 +54,4 @@ def get_data(request, domain, extra_url=None):
 
 
 def service_list(request):
-    return render(request, 'services-list.html')
+    return render(request, 'app.html')
