@@ -5,5 +5,4 @@ from .views import get_data, service_list
 urlpatterns = patterns(
     '',
     url(r'^pub/(?P<domain>[^/]+)/', get_data, name='get_data'),
-    url(r'^', service_list, name='service_list'),
 )
