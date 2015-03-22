@@ -11,14 +11,19 @@
                     controller: 'servicesController'
                 })
 
-                .when('/service/:id', {
+                .when('/service/:id/', {
                     templateUrl: '/static/angular/service.html',
                     controller: 'serviceController',
                 })
 
+                .when('/service/:id/edit/', {
+                    templateUrl: '/static/angular/edit.html',
+                    controller: 'editServiceController',
+                })
+
                 .when('/services/new', {
-                    templateUrl: '/static/angular/new.html',
-                    controller: 'addServiceController',
+                    templateUrl: '/static/angular/edit.html',
+                    controller: 'editServiceController',
                 })
 
                 .otherwise({
@@ -58,7 +63,31 @@
         $scope.refresh();
     }]);
 
-    app.controller('addServiceController', ['$http', '$scope', '$location', function($http, $scope, $location){
+    app.controller('editServiceController', ['$http', '$scope', '$location', '$routeParams', function($http, $scope, $location, $routeParams){
+        $scope.service = {};
+        $scope.is_loading = true;
+
+        if($location.path() === "/services/new")
+        {
+            $scope.service_url = "/api/v1/service/";
+        }else{
+            $scope.service.id = $routeParams.id;
+            $scope.service_url = "/api/v1/service/"+$routeParams.id+"/";
+
+            $http.get("/api/v1/service/"+$scope.service.id+"/?format=json")
+
+                .success(function(data){
+
+                    $scope.service = data;
+                    $scope.is_loading = false;
+                })
+
+                .error(function(data){
+                    $scope.is_loading = false;
+                    alert("Unable to refresh. Try again later.");
+                });
+
+        }
 
         $scope.save = function(entry) {
             entry.store_days = parseInt(entry.store_days,10);
@@ -66,7 +95,7 @@
             entry.request_timeout = parseInt(entry.request_timeout,10);
             entry.cache_duration = parseInt(entry.cache_duration,10);
 
-            $http.post("/api/v1/service/", entry)
+            $http.post($scope.service_url, entry)
                 .success(function(data){
                     console.log(data);
                     alert("Saved");

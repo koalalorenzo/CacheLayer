@@ -1,4 +1,8 @@
-<legend>List of services</legend>
+<legend>
+    List of services -
+    <a href class="glyphicon glyphicon-refresh" aria-hidden="true" ng-click="refresh()"></a>
+</legend>
+
 <div class="section">
     <p class="lead" ng-show="is_loading">Loading...</p>
 
@@ -18,7 +22,10 @@
             <td><a ng-href="service/{{ service.id }}">{{ service.name }}</a></td>
             <td>{{ service.domain }}</td>
             <td>{{ service.is_down }}</td>
-            <td><a ng-href="service/{{ service.id }}">Details</a></td>
+            <td>
+                <a ng-href="service/{{ service.id }}">Details</a>
+                <a ng-href="service/{{ service.id }}/edit">Edit</a>
+            </td>
         </tr>
 
     </table>

@@ -11,12 +11,12 @@ class ServiceResource(ModelResource):
     endpoint = fields.CharField(attribute='endpoint', readonly=True)
 
     class Meta:
-        queryset = Service.objects.all()
+        queryset = Service.objects.all(is_enabled=True)
         resource_name = 'service'
         allowed_methods = ['get', 'post']
         excludes = [
-            'force_down', 'is_crawler_enabled',
-            'created_at', 'edited_at'
+            'force_down', 'is_crawler_enabled', 'is_enabled',
+            'created_at', 'edited_at', 'crawled_at',
         ]
         authentication = Authentication()
         authorization = Authorization()
