@@ -24,7 +24,7 @@ class Service(models.Model):
     store_days = models.IntegerField("Days to keep data", default=7)
     check_period = models.IntegerField("Period of downtime", default=60)
     request_timeout = models.IntegerField("Request timeout", default=30)
-    cache_duration = models.IntegerField("Cache expiration", default=60)
+    cache_duration = models.IntegerField("Cache expiration", default=5)
 
     is_enabled = models.BooleanField(default=False)
     force_down = models.BooleanField(default=False)
