@@ -1,6 +1,10 @@
 <legend>
-    List of services -
-    <a href class="glyphicon glyphicon-refresh" aria-hidden="true" ng-click="refresh()"></a>
+    List of services
+    <div class="pull-right btn-group" role="group" aria-label="actions">
+        <a class="btn btn-sm btn-default" href ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh</a>
+        <a class="btn btn-sm btn-default" href="new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New</a>
+    </div>
+
 </legend>
 
 <div class="section">
@@ -19,13 +23,15 @@
             <th>Actions</th>
         </tr>
         <tr id="service" ng-class="{'danger animated flash down':service.is_down}" ng-hide="is_loading" ng-repeat="service in services">
-            <td><a ng-href="service/{{ service.id }}">{{ service.name }}</a></td>
+            <td><a ng-href="/service/{{ service.id }}/">{{ service.name }}</a></td>
             <td>{{ service.domain }}</td>
             <td>{{ service.is_down }}</td>
             <td>
-                <a ng-href="service/{{ service.id }}">Details</a>
-                <a ng-href="service/{{ service.id }}/edit">Edit</a>
-                <a ng-href="service/{{ service.id }}/delete">Delete</a>
+                <div class="btn-group" role="group" aria-label="actions">
+                    <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" aria-label="details"></span></a>
+                    <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/edit/"><span class="glyphicon glyphicon-edit" aria-hidden="true" aria-label="edit"></span></a>
+                    <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/delete/"><span class="glyphicon glyphicon-trash" aria-hidden="true" aria-label="delete"></span></a>
+                </div>
             </td>
         </tr>
 

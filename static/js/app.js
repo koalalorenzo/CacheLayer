@@ -6,7 +6,7 @@
         function($routeProvider, $locationProvider) {
             $routeProvider
 
-                .when('/services', {
+                .when('/services/', {
                     templateUrl: '/static/angular/list.html',
                     controller: 'servicesController'
                 })
@@ -26,7 +26,7 @@
                     controller: 'deleteServiceController',
                 })
 
-                .when('/services/new', {
+                .when('/services/new/', {
                     templateUrl: '/static/angular/edit.html',
                     controller: 'editServiceController',
                 })
@@ -72,7 +72,7 @@
         $scope.service = {};
         $scope.is_loading = true;
 
-        if($location.path() === "/services/new")
+        if($location.path() === "/services/new/")
         {
             $scope.service_url = "/api/v1/service/";
         }else{

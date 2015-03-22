@@ -1,9 +1,14 @@
-<legend>Service {{service.name}}</legend>
+<legend>
+    Service {{service.name}}
+
+    <div class="pull-right btn-group" role="group" aria-label="...">
+        <a class="btn btn-sm btn-default" ng-href="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
+        <a class="btn btn-sm btn-default" ng-href="delete"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
+    </div>
+
+</legend>
 <div class="section">
     <p class="lead" ng-show="is_loading">Loading...</p>
-
-    <a ng-href="edit">Edit</a>
-    <a ng-href="delete">Delete</a>
 
     <p>How to use:</p>
     <pre><code>curl http://{{ maindomain }}{{ service.endpoint }}{{ url }}</code></pre>

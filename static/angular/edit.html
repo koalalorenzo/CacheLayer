@@ -76,9 +76,9 @@
             <div class="form-group">
                 <label class="col-md-4 control-label"></label>
                 <div class="col-md-8">
-                    <button class="btn btn-success" ng-click="save(service)">Save</button>
-                    <a class="btn btn-default" ng-href="/service/{{ service.id }}/">Cancel</a>
-                </div>
+                    <button class="btn btn-success" ng-click="save(service)"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"> Save</button>
+                    <a class="btn btn-default" ng-show="service.id" ng-href="/service/{{ service.id }}/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>
+                    <a class="btn btn-default" ng-hide="service.id" ng-href="/services/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>                </div>
             </div>
         </fieldset>
     </form>
