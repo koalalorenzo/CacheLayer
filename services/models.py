@@ -8,11 +8,6 @@ from django.db import models
 from django.core.cache import cache
 from django.test import Client
 
-try:
-    import urlparse
-except:
-    from urllib.parse import urlparse
-
 from tld import get_tld
 
 from .tasks import download_content
