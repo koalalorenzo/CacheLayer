@@ -1,5 +1,5 @@
 <legend>
-    Service {{service.name}}
+    {{service.domain}}
 
     <div class="pull-right btn-group" role="group" aria-label="...">
         <a class="btn btn-sm btn-default" ng-href="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
@@ -9,8 +9,8 @@
 </legend>
 <div class="section">
     <p class="lead" ng-show="is_loading">Loading...</p>
+    <p>{{ service.description }}</p>
 
-    <p>How to use:</p>
     <pre><code>curl http://{{ maindomain }}{{ service.endpoint }}{{ url }}</code></pre>
 
     <pre>{{ service | json }}</pre>

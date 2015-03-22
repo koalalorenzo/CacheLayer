@@ -18,10 +18,8 @@ class Service(models.Model):
         verbose_name = "Service"
         verbose_name_plural = "Services"
 
-    name = models.CharField("Name", max_length=50)
-    domain = models.CharField("Domain", max_length=60)
-
-    descrition = models.TextField(null=True, blank=True)
+    domain = models.CharField("Domain", max_length=60, unique=True)
+    description = models.TextField(null=True, blank=True)
 
     store_days = models.IntegerField("Days to keep data", default=7)
     check_period = models.IntegerField("Period of downtime", default=60)
