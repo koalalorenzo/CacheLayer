@@ -11,7 +11,7 @@
         <a href="/services/new">Add a new one</a>
     </div>
 
-    <table id="services-list" class="table table-hover">
+    <table id="services-list" class="table table-hover" ng-show="services.length > 0">
         <tr>
             <th>Name</th>
             <th>Domain</th>
@@ -25,6 +25,7 @@
             <td>
                 <a ng-href="service/{{ service.id }}">Details</a>
                 <a ng-href="service/{{ service.id }}/edit">Edit</a>
+                <a ng-href="service/{{ service.id }}/delete">Delete</a>
             </td>
         </tr>
 

@@ -1,9 +1,12 @@
 <legend>Service {{service.name}}</legend>
 <div class="section">
     <p class="lead" ng-show="is_loading">Loading...</p>
-    <p>How to use:</p>
 
-    <pre><code>curl http://{{ maindomain }}{{ service.endpoint }}</code></pre>
+    <a ng-href="edit">Edit</a>
+    <a ng-href="delete">Delete</a>
+
+    <p>How to use:</p>
+    <pre><code>curl http://{{ maindomain }}{{ service.endpoint }}{{ url }}</code></pre>
 
     <pre>{{ service | json }}</pre>
 

@@ -1,0 +1,12 @@
+<h3>Are you really sure?</h3>
+<div class="section">
+    <p class="lead">
+        You are going to delete {{ service.domain }}. Here is a cat that will try to not do that:<br>
+
+        <a href="http://thecatapi.com"><img src="http://thecatapi.com/api/images/get?format=src&type=jpg&size=small"></a>
+    </p>
+    <div>
+        <button class="btn btn-success" ng-click="delete(service.id)">Yeah delete {{service.name}}...</button>
+        <a class="btn btn-error" href="services">Naah</a>
+    </div>
+</div>
