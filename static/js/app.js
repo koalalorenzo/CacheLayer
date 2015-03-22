@@ -195,5 +195,31 @@
         $scope.get_service($routeParams.id);
     }]);
 
+    app.filter('cachedUrl', function() {
+        return function(input, service) {
+            if(input == null || input === 'undefined'){
+                return "";
+            }
+
+            if (input.indexOf("://") > -1) {
+                domain = input.split('/')[2];
+            }
+            else {
+                domain = input.split('/')[0];
+            }
+
+            if(service.domain != domain){
+                return "";
+            }
+
+            new_url = input.split(domain)[1]
+            if(new_url.charAt(0) === '/'){
+                return new_url.slice(1);
+            }
+
+            return new_url;
+        };
+    })
+
 
 })();

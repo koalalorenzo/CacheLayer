@@ -1,84 +1,82 @@
-<div class="section">
+<form class="form-horizontal">
+    <fieldset>
 
-    <form class="form-horizontal">
-        <fieldset>
+        <legend>New Service</legend>
 
-            <legend>New Service</legend>
-
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="domain">Domain</label>
-                <div class="col-md-5">
-                    <input type="text" ng-model="service.domain" placeholder="data.gov" class="form-control input-md" required="">
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="domain">Domain</label>
+            <div class="col-md-5">
+                <input type="text" ng-model="service.domain" placeholder="data.gov" class="form-control input-md" required="">
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="description">Description</label>
-                <div class="col-md-5">
-                    <input type="text" ng-model="service.description" placeholder="Provide the weather info" class="form-control input-md" required="">
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="description">Description</label>
+            <div class="col-md-5">
+                <input type="text" ng-model="service.description" placeholder="Provide the weather info" class="form-control input-md" required="">
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="store_days">Days of storage</label>
-                <div class="col-md-4">
-                    <select ng-model="service.store_days" class="form-control" required="">
-                        <option value="1">1</option>
-                        <option value="3">3</option>
-                        <option value="7" selected>7</option>
-                        <option value="15">15</option>
-                        <option value="31">31</option>
-                        <option value="60">60</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="store_days">Days of storage</label>
+            <div class="col-md-4">
+                <select ng-model="service.store_days" class="form-control" required="">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="7" selected>7</option>
+                    <option value="15">15</option>
+                    <option value="31">31</option>
+                    <option value="60">60</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="check_period">Downtime period</label>
-                <div class="col-md-4">
-                    <select ng-model="service.check_period" class="form-control" required="">
-                        <option value="30">30 seconds</option>
-                        <option value="60" selected>60 seconds</option>
-                        <option value="300">5 minutes</option>
-                        <option value="900">15 minutes</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="check_period">Downtime period</label>
+            <div class="col-md-4">
+                <select ng-model="service.check_period" class="form-control" required="">
+                    <option value="30">30 seconds</option>
+                    <option value="60" selected>60 seconds</option>
+                    <option value="300">5 minutes</option>
+                    <option value="900">15 minutes</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="request_timeout">Requests Timeout</label>
-                <div class="col-md-4">
-                    <select ng-model="service.request_timeout" class="form-control">
-                        <option value="15">15 seconds</option>
-                        <option value="30">30 seconds</option>
-                        <option value="45">45 seconds</option>
-                        <option value="60" selected>60 seconds</option>
-                        <option value="120">120 seconds</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="request_timeout">Requests Timeout</label>
+            <div class="col-md-4">
+                <select ng-model="service.request_timeout" class="form-control">
+                    <option value="15">15 seconds</option>
+                    <option value="30">30 seconds</option>
+                    <option value="45">45 seconds</option>
+                    <option value="60" selected>60 seconds</option>
+                    <option value="120">120 seconds</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="cache_duration">Cache duration</label>
-                <div class="col-md-4">
-                    <select ng-model="service.cache_duration" class="form-control">
-                        <option value="0" selected>Disabled</option>
-                        <option value="30">30 seconds</option>
-                        <option value="60">60 seconds</option>
-                        <option value="300">5 minutes</option>
-                        <option value="900">15 minutes</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="cache_duration">Cache duration</label>
+            <div class="col-md-4">
+                <select ng-model="service.cache_duration" class="form-control">
+                    <option value="0">Disabled</option>
+                    <option value="5" selected>5 seconds</option>
+                    <option value="30">30 seconds</option>
+                    <option value="60">60 seconds</option>
+                    <option value="300">5 minutes</option>
+                    <option value="900">15 minutes</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label"></label>
-                <div class="col-md-8">
-                    <button class="btn btn-success" ng-click="save(service)"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"> Save</button>
-                    <a class="btn btn-default" ng-show="service.id" ng-href="/service/{{ service.id }}/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>
-                    <a class="btn btn-default" ng-hide="service.id" ng-href="/services/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
+        <div class="form-group">
+            <label class="col-md-4 control-label"></label>
+            <div class="col-md-8">
+                <button class="btn btn-success" ng-click="save(service)"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"> Save</button>
+                <a class="btn btn-default" ng-show="service.id" ng-href="/service/{{ service.id }}/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>
+                <a class="btn btn-default" ng-hide="service.id" ng-href="/services/"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"> Cancel</a>                </div>
+        </div>
+    </fieldset>
+</form>
 <pre>{{ service | json }}</pre>
