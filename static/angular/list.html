@@ -12,7 +12,7 @@
         <div id="service" ng-class="{'animated flash down':service.is_down}">
             <h4 class="lead">{{ service.name }} <small>({{ service.domain }})</small></h4>
             <p>{{ service.description }}</p>
-            <pre><code>curl http://{{ maindomain }}{{ service.endpoint }}</code></pre>
+            <a ng-href="service/{{ service.id }}">Details</a>
         </div>
 
     </div>

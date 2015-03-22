@@ -11,6 +11,11 @@
                     controller: 'servicesController'
                 })
 
+                .when('/service/:id', {
+                    templateUrl: '/static/angular/service.html',
+                    controller: 'serviceController',
+                })
+
                 .when('/services/new', {
                     templateUrl: '/static/angular/new.html',
                     controller: 'addServiceController',
@@ -46,15 +51,14 @@
 
                 .error(function(data){
                     $scope.is_loading = false;
-                    alert("Unable to refresh. Try again later.");
+                    $location.path('404');
                 });
-
         };
 
         $scope.refresh();
     }]);
 
-    app.controller('addServiceController', ['$http', '$scope', function($http, $scope){
+    app.controller('addServiceController', ['$http', '$scope', '$location', function($http, $scope, $location){
 
         $scope.save = function(entry) {
             entry.store_days = parseInt(entry.store_days,10);
@@ -67,6 +71,7 @@
                     console.log(data);
                     alert("Saved");
                     $scope.reset();
+                    $location.path('service/'+data.id);
                 })
                 .error(function(data){
                     console.log(data);
@@ -80,4 +85,29 @@
 
     }]);
 
+    app.controller('serviceController', ['$http', '$scope', '$routeParams', function($http, $scope, $routeParams){
+        $scope.service = {};
+        $scope.is_loading = true;
+
+        $scope.get_service = function(service_id){
+            $scope.service = {};
+            $scope.is_loading = true;
+
+            $http.get("/api/v1/service/"+service_id+"/?format=json")
+
+                .success(function(data){
+
+                    $scope.service = data;
+                    $scope.is_loading = false;
+                })
+
+                .error(function(data){
+                    $scope.is_loading = false;
+                    alert("Unable to refresh. Try again later.");
+                });
+        };
+
+        $scope.get_service($routeParams.id);
+
+    }]);
 })();
