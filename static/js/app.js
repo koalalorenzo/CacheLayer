@@ -71,6 +71,8 @@
     app.controller('editServiceController', ['$http', '$scope', '$location', '$routeParams', function($http, $scope, $location, $routeParams){
         $scope.service = {};
         $scope.is_loading = true;
+        $scope.show_error = false;
+        $scope.error = {};
 
         if($location.path() === "/services/new/")
         {
@@ -82,13 +84,15 @@
             $http.get("/api/v1/service/"+$scope.service.id+"/?format=json")
 
                 .success(function(data){
+                    $scope.show_error = false;
                     $scope.service = data;
                     $scope.is_loading = false;
                 })
 
                 .error(function(data){
                     $scope.is_loading = false;
-                    console.log(data);
+                    $scope.show_error = true;
+                    $scope.error = data;
                     alert("Unable to refresh. Try again later.");
                 });
 
@@ -113,10 +117,12 @@
             $http(req)
                 .success(function(data){
                     $scope.reset();
-                    $location.path('service/'+data.id);
+                    $location.path('/service/'+data.id);
                 })
                 .error(function(data){
                     console.log(data);
+                    $scope.show_error = true;
+                    $scope.error = data;
                     alert("Unable to save");
                 });
         };

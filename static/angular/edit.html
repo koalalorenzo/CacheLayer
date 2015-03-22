@@ -79,4 +79,10 @@
         </div>
     </fieldset>
 </form>
-<pre>{{ service | json }}</pre>
+
+<div ng-show="show_error">
+    Object:
+    <pre>{{ service | json }}</pre>
+    Error:
+    <pre>{{ error | json }}</pre>
+</div>
