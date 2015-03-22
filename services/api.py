@@ -11,7 +11,7 @@ class ServiceResource(ModelResource):
     class Meta:
         queryset = Service.objects.all()
         resource_name = 'service'
-        allowed_methods = ['get']
+        allowed_methods = ['get', 'post']
         excludes = [
             'force_down', 'is_crawler_enabled',
             'created_at', 'edited_at'

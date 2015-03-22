@@ -1,10 +1,10 @@
-<h3>List of services</h3>
+<legend>List of services</legend>
 <div class="section">
     <p class="lead" ng-show="is_loading">Loading...</p>
 
     <div ng-hide="services.length > 0">
         <p class="lead">No services available!</p>
-        <a href="/add">Add a new one</a>
+        <a href="/services/new">Add a new one</a>
     </div>
 
     <div id="services-list" ng-hide="is_loading" ng-repeat="service in services">

@@ -11,8 +11,8 @@
                     controller: 'servicesController'
                 })
 
-                .when('/services/add', {
-                    templateUrl: '/static/angular/add.html',
+                .when('/services/new', {
+                    templateUrl: '/static/angular/new.html',
                     controller: 'addServiceController',
                 })
 
@@ -27,16 +27,18 @@
 
         }]);
 
-    app.controller('servicesController', ['$http', '$scope', '$timeout', function($http, $scope, $timeout){
+    app.controller('servicesController', ['$http', '$scope', '$timeout', '$routeParams', function($http, $scope, $timeout, $routeParams){
         $scope.services = [];
         $scope.is_loading = true;
 
         $scope.refresh = function(){
+            $scope.services = [];
             $scope.is_loading = true;
 
             $http.get("/api/v1/service/?format=json")
 
                 .success(function(data){
+
                     $scope.services = data.objects;
                     $scope.is_loading = false;
 
@@ -53,6 +55,18 @@
     }]);
 
     app.controller('addServiceController', ['$http', '$scope', function($http, $scope){
+
+        $scope.save = function(entry) {
+            $http.post("/api/v1/service/", entry)
+                .success(function(data){
+                    console.log(data);
+                    alert("Saved");
+                })
+                .error(function(data){
+                    console.log(data);
+                    alert("Unable to save");
+                });
+        };
 
     }]);
 
