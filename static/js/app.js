@@ -57,16 +57,26 @@
     app.controller('addServiceController', ['$http', '$scope', function($http, $scope){
 
         $scope.save = function(entry) {
+            entry.store_days = parseInt(entry.store_days,10);
+            entry.check_period = parseInt(entry.check_period,10);
+            entry.request_timeout = parseInt(entry.request_timeout,10);
+            entry.cache_duration = parseInt(entry.cache_duration,10);
+
             $http.post("/api/v1/service/", entry)
                 .success(function(data){
                     console.log(data);
                     alert("Saved");
+                    $scope.reset();
                 })
                 .error(function(data){
                     console.log(data);
                     alert("Unable to save");
                 });
         };
+
+        $scope.reset = function(form) {
+            $scope.service = {};
+        }
 
     }]);
 
