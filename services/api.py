@@ -11,9 +11,9 @@ class ServiceResource(ModelResource):
     endpoint = fields.CharField(attribute='endpoint', readonly=True)
 
     class Meta:
-        queryset = Service.objects.all(is_enabled=True)
+        queryset = Service.objects.all().order_by("-edited_at")
         resource_name = 'service'
-        allowed_methods = ['get', 'post']
+        allowed_methods = ['get', 'post', 'put', 'delete']
         excludes = [
             'force_down', 'is_crawler_enabled', 'is_enabled',
             'created_at', 'edited_at', 'crawled_at',
