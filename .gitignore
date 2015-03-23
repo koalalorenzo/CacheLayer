@@ -13,7 +13,6 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
 lib/
 lib64/
 parts/
@@ -38,7 +37,6 @@ htmlcov/
 .tox/
 .coverage
 .cache
-__pycache__
 nosetests.xml
 coverage.xml
 
