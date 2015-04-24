@@ -1,7 +1,7 @@
 <h2>
     List of services
     <div class="pull-right btn-group" role="group" aria-label="actions">
-        <a class="btn btn-sm btn-default" href ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh</a>
+        <a class="btn btn-sm btn-default hidden-xs" href ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh</a>
         <a class="btn btn-sm btn-default" href="new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New</a>
     </div>
 </h2>
@@ -17,19 +17,19 @@
     <table id="services-list" class="table table-hover" ng-show="services.length > 0">
         <tr>
             <th>Domain</th>
-            <th>Description</th>
+            <th class="hidden-xs">Description</th>
             <th>Is down?</th>
             <th>Actions</th>
         </tr>
         <tr id="service" ng-class="{'danger animated flash down':service.is_down}" ng-hide="is_loading" ng-repeat="service in services">
             <td><a ng-href="/service/{{ service.id }}/">{{ service.domain }}</a></td>
-            <td>{{ service.description | limitTo:60 }}</td>
+            <td class="hidden-xs">{{ service.description | limitTo:60 }}</td>
             <td>{{ service.is_down }}</td>
             <td>
                 <div class="btn-group" role="group" aria-label="actions">
                     <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" aria-label="details"></span></a>
-                    <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/edit/"><span class="glyphicon glyphicon-edit" aria-hidden="true" aria-label="edit"></span></a>
-                    <a class="btn btn-sm btn-default" ng-href="/service/{{ service.id }}/delete/"><span class="glyphicon glyphicon-trash" aria-hidden="true" aria-label="delete"></span></a>
+                    <a class="btn btn-sm btn-default hidden-xs" ng-href="/service/{{ service.id }}/edit/"><span class="glyphicon glyphicon-edit" aria-hidden="true" aria-label="edit"></span></a>
+                    <a class="btn btn-sm btn-default hidden-xs" ng-href="/service/{{ service.id }}/delete/"><span class="glyphicon glyphicon-trash" aria-hidden="true" aria-label="delete"></span></a>
                 </div>
             </td>
         </tr>

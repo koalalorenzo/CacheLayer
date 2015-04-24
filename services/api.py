@@ -1,6 +1,6 @@
 from tastypie.resources import ModelResource
-from tastypie.authorization import Authorization
-from tastypie.authentication import Authentication
+from tastypie.authorization import DjangoAuthorization
+from tastypie.authentication import SessionAuthentication
 from tastypie import fields
 
 from .models import Service
@@ -18,6 +18,6 @@ class ServiceResource(ModelResource):
             'force_down', 'is_crawler_enabled', 'is_enabled',
             'created_at', 'edited_at', 'crawled_at',
         ]
-        authentication = Authentication()
-        authorization = Authorization()
+        authentication = SessionAuthentication()
+        authorization = DjangoAuthorization()
         always_return_data = True
