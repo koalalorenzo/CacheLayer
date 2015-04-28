@@ -11,11 +11,6 @@
                     controller: 'servicesController'
                 })
 
-                .when('/services/', {
-                    templateUrl: '/static/angular/list.html',
-                    controller: 'servicesController'
-                })
-
                 .when('/service/:id/', {
                     templateUrl: '/static/angular/service.html',
                     controller: 'serviceController',
@@ -31,7 +26,7 @@
                     controller: 'deleteServiceController',
                 })
 
-                .when('/services/new/', {
+                .when('/new/', {
                     templateUrl: '/static/angular/edit.html',
                     controller: 'editServiceController',
                 })
@@ -79,7 +74,7 @@
         $scope.show_error = false;
         $scope.error = {};
 
-        if($location.path() === "/services/new/")
+        if($location.path() === "/new/")
         {
             $scope.service_url = "/api/v1/service/";
         }else{
@@ -193,13 +188,13 @@
                 .success(function(data){
                     $scope.is_loading = false;
                     alert("Deleted :(");
-                    $location.path("services");
+                    $location.path("/");
                 })
                 .error(function(data){
                     $scope.is_loading = false;
                     console.log(data);
                     alert("Unable to refresh. Try again later.");
-                    $location.path("services");
+                    $location.path("/");
                 });
         };
 
