@@ -6,6 +6,11 @@
         function($routeProvider, $locationProvider) {
             $routeProvider
 
+                .when('/', {
+                    templateUrl: '/static/angular/list.html',
+                    controller: 'servicesController'
+                })
+
                 .when('/services/', {
                     templateUrl: '/static/angular/list.html',
                     controller: 'servicesController'
